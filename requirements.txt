@@ -1,0 +1,6 @@
+openpyxl
+pandas
+PyPDF2
+colorama
+Pillow
+reportlab
