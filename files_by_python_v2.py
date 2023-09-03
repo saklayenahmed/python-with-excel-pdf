@@ -15,7 +15,7 @@
 
 import os
 from datetime import datetime
-
+import time
 import openpyxl
 import pandas as pd
 import PyPDF2
@@ -26,10 +26,21 @@ from PyPDF2 import PdfMerger
 from reportlab.lib.pagesizes import A4, letter
 from reportlab.pdfgen import canvas
 
+def landing():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("\nPython script for handling Excel and PDF files")
+    print(Back.GREEN+"\nMade by Saklayen Ahmed"+Style.RESET_ALL)
+    print("\n\nPlease wait. Loading...")
+    time.sleep(3)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("-----------------------------------")
+    print("Welcome to Python for Excel and PDF")
+    print("-----------------------------------")
 
 def initial():
+    landing()
     intinput = input(
-        '''\nWhat do you want:\n'''
+        '''\nWhat do you want:\n\n'''
         '''1. Merge excel files\n'''
         '''2. Clean excel files\n'''
         '''3. Clean and Merge excel files\n'''
@@ -39,7 +50,8 @@ def initial():
         '''7. Split PDF Defined pages\n'''
         '''8. Split PDF all pages\n'''
         '''9. Make JPG to PDF\n'''
-        '''\nEnter your option (1/2/3/4/5/6/7/8/9): '''
+        '''00. Report an Issue\n'''
+        '''\nChoose your option (1/2/3/4/5/6/7/8/9):\n\n'''
         )
 
     if intinput=="1":
@@ -87,6 +99,11 @@ def initial():
         intext = Back.GREEN + intext + Style.RESET_ALL
         print(intext)
         jpgtopdf()
+    elif intinput =="00":
+        print("\nPress and hold 'alt' then click on this link.")
+        url = "https://github.com/saklayenahmed/python-with-excel-pdf/issues/new"
+        intext = "\nVisit "+ Back.GREEN + url + Style.RESET_ALL+" "+ Back.RED + "If you face any issue" + Style.RESET_ALL
+        print(intext)
     elif not intinput.isdigit() or not (1 <= int(intinput) <= 8):
         if not intinput.isdigit():
             intext = "\nSorry! You have to select any option here. Executing again..."
