@@ -28,12 +28,12 @@ from reportlab.pdfgen import canvas
 
 def landing():
     os.system('cls' if os.name == 'nt' else 'clear')
-    print("\nPython script for handling Excel and PDF files")
-    print(Back.GREEN+"\nMade by Saklayen Ahmed"+Style.RESET_ALL)
-    print("\n\nPlease wait. Loading...")
+    print("\nPython for handling Excel and PDF files")
+    print(Back.GREEN+"Made by Saklayen Ahmed"+Style.RESET_ALL)
+    print("\nPlease wait. Loading...")
     time.sleep(3)
     os.system('cls' if os.name == 'nt' else 'clear')
-    print("-----------------------------------")
+    print("\n-----------------------------------")
     print("Welcome to Python for Excel and PDF")
     print("-----------------------------------")
 
