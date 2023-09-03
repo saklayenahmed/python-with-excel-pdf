@@ -29,7 +29,7 @@ from reportlab.pdfgen import canvas
 def landing():
     os.system('cls' if os.name == 'nt' else 'clear')
     print("\nPython for handling Excel and PDF files")
-    print(Back.GREEN+"Made by Saklayen Ahmed"+Style.RESET_ALL)
+    print(Back.GREEN+"Imtiaz Rashid initiated this project, and Saklayen Ahmed took it to the next level."+Style.RESET_ALL)
     print("\nPlease wait. Loading...")
     time.sleep(3)
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -100,9 +100,11 @@ def initial():
         print(intext)
         jpgtopdf()
     elif intinput =="00":
-        print("\nPress and hold 'alt' then click on this link.")
+        print(Back.RED + "\nReport an Issue" + Style.RESET_ALL)
+        print("\nPlease feel free to reach out if you have any feedback on this Python script.\n")
+        print("You can reach me either by direct message or by creating an issue on GitHub.")
         url = "https://github.com/saklayenahmed/python-with-excel-pdf/issues/new"
-        intext = "\nVisit "+ Back.GREEN + url + Style.RESET_ALL+" "+ Back.RED + "If you face any issue" + Style.RESET_ALL
+        intext = "\nGithub Issue: Press and hold 'alt' then click on this link. Link: "+ Back.GREEN + url + Style.RESET_ALL
         print(intext)
     elif not intinput.isdigit() or not (1 <= int(intinput) <= 8):
         if not intinput.isdigit():
