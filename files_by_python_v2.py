@@ -129,7 +129,6 @@ def jpgtopdf():
 
     print(f"\nPDF created and save to : {pdf_output}")
 
-
 def pdfSplitAll():
     curr_time = datetime.now().strftime("%Y%m%d%H%M%S")
     
@@ -352,25 +351,6 @@ def mergeExcel():
         excel_path = os.path.join(excel_directory, excel_file)
         input_files.append(excel_path)
 
-    '''
-    # Ask the user to enter the input file names one by one, until they enter 'done'
-    while True:
-        filename = input("Enter excel file name (or press Enter to finish): ")
-        if not filename:
-            break
-        input_files.append(filename)
-
-    # Get the output file name from the user
-    filename_output = input("\nEnter the output file name: ")
-
-    # Get all file name in joined
-    all_file_name = "\n".join(str(in_file) for in_file in input_files)
-
-    print('\nYou have input these files: \n\n'+all_file_name)
-    print("\nExcel file " +Back.BLUE + filename_output + Style.RESET_ALL+ " merging started, please wait....")
-
-    '''
-
     # Create a new output workbook
     workbook_output = openpyxl.Workbook()
 
@@ -482,72 +462,42 @@ def clean_and_merge():
 
     print("\nCleaning and merging excel files have been completed. Thank you !")
 
-"""
-def filter_and_merge():
-    # Create an empty list to store the input file names
-    input_files = []
-
-    # Ask the user to enter the input file names one by one, until they enter 'done'
-    while True:
-        filename = input("Enter excel file name (or press Enter to finish): ")
-        if not filename:
-            break
-        input_files.append(filename)
-
-    # Set the name of the column to filter and the keyword to look for
-    column_to_filter = input("\nEnter filter column name: ")
-    keyword_to_filter = input("Enter "+column_to_filter+" filter keyword: ")
-
-    # Get all file name in joined
-    all_file_name = "\n".join(str(in_file) for in_file in input_files)
-
-    print('\nYou have input these files: \n\n'+all_file_name)
-    print("\nFiltering and merging started, please wait....")
-
-    # Initialize a list to store the filtered dataframes
-    dfs = []
-
-    # Loop through the Excel files and filter the desired column by the keyword
-    for files in input_files:
-        try:
-            df = pd.read_excel(files+".xlsx", sheet_name=0)
-        except FileNotFoundError:
-            print("\n"+Back.RED+f"File '{files}.xlsx' not found. Skipping file..."+Style.RESET_ALL)
-            continue
-
-        df_filtered = df[df[column_to_filter] == keyword_to_filter]
-        dfs.append(df_filtered)
-
-    # Concatenate the filtered dataframes into a single dataframe
-    merged_df = pd.concat(dfs, axis=0)
-
-    # Save the merged dataframe to a new Excel file
-    with pd.ExcelWriter(keyword_to_filter+'.xlsx') as writer:
-        merged_df.to_excel(writer, index=False, sheet_name=keyword_to_filter)
-
-    print('\nFiltered in '+Back.BLUE + column_to_filter + Style.RESET_ALL+' (column) by '+Back.BLUE + keyword_to_filter + Style.RESET_ALL+' (column keyword) and excel file merged done. Thank you !')
-"""
-
 def filter_and_merge_key():
+   
+    curr_time = datetime.now().strftime("%Y%m%d%H%M%S")
+
     # Create an empty list to store the input file names
     input_files = []
 
-    # Ask the user to enter the input file names one by one, until they enter 'done'
-    while True:
-        filename = input("Enter excel file name (or press Enter to finish): ")
-        if not filename:
-            break
-        input_files.append(filename)
+    # Specify the directory containing the PDF files
+    excel_directory = input("Enter the directory containing the xlsx files:\n")
+    # Get the folder name
+    folder_name = os.path.basename(excel_directory)
+    # Get a list of PDF files in the directory and sort them by filename
+    excel_files = [excel_file for excel_file in os.listdir(excel_directory) if excel_file.lower().endswith('.xlsx')]
+    excel_files.sort()
+
+    if not excel_files:
+        print("\nNo Excel files found in the directory.")
+        return
+
+    print("\nExcel files found in the directory:\n")
+    for excel_file in excel_files:
+        print(excel_file)
 
     # Set the name of the column to filter and the keywords to look for
     column_to_filter = input("\nEnter filter column name: ")
     keywords_to_filter = input("Enter " + column_to_filter + " filter keywords (separated by commas): ").split(",")
+    keywords_to_filter = [keyword.strip().lower() for keyword in keywords_to_filter]
 
-    # Get all file name in joined
-    all_file_name = "\n".join(str(in_file) for in_file in input_files)
-
-    print('\nYou have input these files: \n\n' + all_file_name)
-    print("\nFiltering and merging started, please wait....")
+    confirmation = input("\nDo you want to filter and merge these Excel Files? (yes/no): ")
+    if confirmation.lower() != "yes":
+        print("\nExcel files filtering and merging canceled. Thank you!")
+        return
+    
+    for excel_file in excel_files:
+        excel_path = os.path.join(excel_directory, excel_file)
+        input_files.append(excel_path)
 
     # Initialize a list to store the filtered dataframes
     dfs = []
@@ -555,11 +505,11 @@ def filter_and_merge_key():
     # Loop through the Excel files and filter the desired column by the keywords
     for file in input_files:
         try:
-            df = pd.read_excel(file + ".xlsx", sheet_name=0)
+            df = pd.read_excel(file, sheet_name=0)
         except FileNotFoundError:
             print("\n" + Back.RED + f"File '{file}.xlsx' not found. Skipping file..." + Style.RESET_ALL)
             continue
-        
+        df[column_to_filter] = df[column_to_filter].astype(str).str.lower()
         if not keywords_to_filter:
             df_filtered = df[df[column_to_filter]==""]
         else:
@@ -571,9 +521,7 @@ def filter_and_merge_key():
     merged_df = pd.concat(dfs, axis=0)
 
     # Save the merged dataframe to a new Excel file
-    now = datetime.now()
-    time_str = now.strftime("%Y%m%d_%H%M%S")
-    output_file_name = "_".join(keywords_to_filter) + "_" + time_str + ".xlsx"
+    output_file_name = os.path.join(excel_directory, folder_name+"_" + "_".join(keywords_to_filter) + "_" + curr_time + ".xlsx")
     with pd.ExcelWriter(output_file_name) as writer:
         merged_df.to_excel(writer, index=False, sheet_name="Filtered")
 
