@@ -143,6 +143,7 @@ def pdftojpg():
         print(f"\n No PDF files found in this folder.")
         return
     else:
+        print("\nPDF files found in the folder:\n")
         for index, pdf_file in enumerate(pdf_files, start=1):
             print(f"{index}. {os.path.basename(pdf_file)}")
 
