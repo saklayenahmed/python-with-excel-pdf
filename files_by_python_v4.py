@@ -39,7 +39,7 @@ def landing():
     print("\nPlease wait. Loading...")
     time.sleep(3)
     os.system('cls' if os.name == 'nt' else 'clear')
-    print("\n-----------------------------------")
+    print("-----------------------------------")
     print("Welcome to Python for Excel and PDF")
     print("-----------------------------------")
 
@@ -47,16 +47,16 @@ def initial():
     landing()
     intinput = input(
         '''\nWhat do you want:\n\n'''
-        '''1. Merge excel files\n'''
-        '''2. Clean excel files\n'''
-        '''3. Clean and Merge excel files\n'''
-        '''4. Filter with keyword and Merge excel files\n'''
-        '''5. Merge excel sheets\n'''
-        '''6. Multiple PDF Merge\n'''
-        '''7. Split PDF Defined pages\n'''
-        '''8. Split PDF all pages\n'''
-        '''9. Convert JPG to PDF\n'''
-        '''10. Convert PDF to JPG\n'''
+        '''1. [EXCEL] Merge excel files\n'''
+        '''2. [EXCEL] Clean excel files\n'''
+        '''3. [EXCEL] Clean and Merge excel files\n'''
+        '''4. [EXCEL] Filter with keyword and Merge excel files\n'''
+        '''5. [EXCEL] Merge excel sheets\n'''
+        '''6. [PDF] Multiple PDF Merge\n'''
+        '''7. [PDF] Split PDF Defined pages\n'''
+        '''8. [PDF] Split PDF all pages\n'''
+        '''9. [JPG] Convert JPG to PDF\n'''
+        '''10.[JPG] Convert PDF to JPG\n'''
         '''00. Report an Issue\n'''
         '''\nChoose your option (1/2/3/4/5/6/7/8/9/10):\n\n'''
         )
@@ -154,7 +154,7 @@ def pdftojpg():
     converted = False
 
     while not converted:
-        pdf_choice = input("\nEnter the PDF file number to convert to JPG or type 'cancel': ")
+        pdf_choice = input("\nEnter PDF folder directory or type 'cancel': ")
 
         if pdf_choice=='cancel' or pdf_choice =="":
             print("PDF to JPG conversion canceled, thank you !")
@@ -174,6 +174,8 @@ def pdftojpg():
 
         dir_name = f"{input_folder}/{os.path.basename(root)}_{curr_time}"
         os.makedirs(f"{dir_name}")
+        
+        print(f"\n PDF converting to JPG. Please wait a moment...!\n")
 
         for page_no in range(pdf.page_count):
             page = pdf[page_no]
@@ -189,13 +191,15 @@ def jpgtopdf():
     curr_time = datetime.now().strftime("%Y%m%d%H%M%S")
     converted = False
     while not converted:
-        input_folder = input("\nEnter image folder directory or type 'cancel': ")
+        input_folder = input("\nEnter Image folder directory or type 'cancel':\n")
         if input_folder=='cancel' or input_folder=="":
             print("Conversion canceled, thank you !")
             return
         image_paths = [os.path.join(input_folder, file) for file in os.listdir(input_folder) if file.lower().endswith(('.jpg', '.png', '.jpeg', '.gif', '.bmp'))]
         pdf_output = os.path.join(input_folder, f"{os.path.basename(input_folder)}_"+curr_time+".pdf")
         c = canvas.Canvas(pdf_output, pagesize=letter)
+        
+        print(f"\n JPG converting to PDF. Please wait a moment...!\n")
 
         for image_path in image_paths:
             image = Image.open(image_path)
@@ -231,7 +235,7 @@ def pdfSplitAll():
                 writer.add_page(pdf.pages[page_num])
                 writer.write(output_file)
 
-    folder_path = input("\nEnter folder path containing the PDF files:\n")
+    folder_path = input("\nEnter PDF folder directory:\n")
     pdf_files = [pdf_file for pdf_file in os.listdir(folder_path) if pdf_file.lower().endswith('.pdf')]
     pdf_files.sort()
 
@@ -244,7 +248,7 @@ def pdfSplitAll():
         print(f"{index}. {pdf_file}")
 
     pdf_choice = input("\nEnter the number of the PDF to split or type 'cancel': ")
-    if pdf_choice.lower() == "no":
+    if pdf_choice.lower() == "cancel":
         print("\nPDF splitting canceled. Thank you!")
         return
 
@@ -260,6 +264,8 @@ def pdfSplitAll():
         os.makedirs(output_folder, exist_ok=True)
         
         pages_to_split = input("\nDo you want to split these PDFs? (yes/no): ")
+
+        print(f"\n PDF Splitting have been started. Please wait a moment...!\n")
 
         if pages_to_split.lower() == "yes":
             split_pdf(input_pdf_path, output_folder, pages_to_split)
@@ -288,7 +294,7 @@ def pdfSplitDefined():
             
             writer.write(output_file)
 
-    folder_path = input("\nEnter folder path containing the PDF files:\n")
+    folder_path = input("\nEnter PDF folder directory:\n")
     pdf_files = [pdf_file for pdf_file in os.listdir(folder_path) if pdf_file.endswith('.pdf')]
     pdf_files.sort()
 
@@ -319,6 +325,8 @@ def pdfSplitDefined():
         # Generate the output PDF path based on the input PDF file name
         output_pdf_name = f"Split_{os.path.splitext(selected_pdf)[0]}_{curr_time}.pdf"
         output_pdf_path = os.path.join(folder_path, output_pdf_name)
+        
+        print(f"\n PDF Splitting have been started. Please wait a moment...!\n")
 
         split_pdf(input_pdf_path, output_pdf_path, pages_to_split)
         print(f"\nPDF pages split and saved to {output_pdf_path}")
@@ -328,7 +336,7 @@ def pdfSplitDefined():
 
 def mergePDF():
     curr_time = datetime.now().strftime("%Y%m%d%H%M%S")
-    pdf_directory = input("Enter the directory containing the PDF files:\n")
+    pdf_directory = input("Enter PDF folder directory:\n")
     folder_name = os.path.basename(pdf_directory)
     pdf_files = [pdf_file for pdf_file in os.listdir(pdf_directory) if pdf_file.lower().endswith('.pdf')]
     pdf_files.sort()
@@ -348,6 +356,8 @@ def mergePDF():
 
     pdf_merger = PdfMerger()
 
+    print(f"\n PDF Merging have been started. Please wait a moment...!\n")
+
     for pdf_file in pdf_files:
         pdf_path = os.path.join(pdf_directory, pdf_file)
         pdf_merger.append(pdf_path)
@@ -359,59 +369,67 @@ def mergePDF():
     print("\nPDFs merged successfully. Thank you!")
 
 def cleanExcel():
-    # Create an empty list to store the input and output file names
-    file_names = []
+    curr_time = datetime.now().strftime("%Y%m%d%H%M%S")
 
-    # Ask the user for the file names and add them to the list
+    input_files = []
+
+    excel_directory = input("\nEnter Excel folder directory:\n")
+
+   
     while True:
-        file_name_in = input("Enter excel file name (or press Enter to finish): ")
-        if not file_name_in:
-            break
-        file_name_out = input("Enter output file name: ")
-        file_names.append((file_name_in, file_name_out))
+        folder_name = os.path.basename(excel_directory)
+        valid_extensions = ('.xlsx', '.xls', '.csv')
+        excel_files = [excel_file for excel_file in os.listdir(excel_directory) if excel_file.lower().endswith(valid_extensions)]
+        excel_files.sort()
 
-    # Get all file name in joined
-    all_file_name = "\n".join(str(in_file) for in_file in file_names)
+        if not excel_files:
+            print("\nNo Excel or CSV files found in the directory.")
+            return
+        
+        print("\nExcel and CSV files found in the directory:\n")
+        for index, excel_file in enumerate(excel_files, start=1):
+            print(f"{index}. {excel_file}")
+        
+        excel_choice = input("\nEnter the number of the EXCEL to clean or type 'cancel': ")
+        
+        if excel_choice.lower() == "cancel":
+            print("\nExcel Cleaning canceled. Thank you!")
+            return
+        
+        excel_index = int(excel_choice) - 1
+        if excel_index < 0 or excel_index >= len(excel_files):
+            print("Invalid Excel number.")
+            return
 
-    print('\nYou have input these files: \n\n'+all_file_name)
+        selected_excel = excel_files[excel_index]
+        excel_path = os.path.join(excel_directory, selected_excel)
 
-    # Loop through the list of file names and clean each file
-    for file_name_in, file_name_out in file_names:
-
-        file_name_in_color = Back.BLUE + file_name_in + Style.RESET_ALL
+        file_name_in_color = Back.BLUE + selected_excel + Style.RESET_ALL
         print("\nCleaning Excel File: ", file_name_in_color)
 
-        # Read the Excel file
         try:
-            df = pd.read_excel(file_name_in+'.xlsx')
-        except FileNotFoundError:
-            print("\n"+Back.RED+f"File '{file_name_in}.xlsx' not found. Skipping file..."+Style.RESET_ALL)
+            df = pd.read_excel(excel_path)
+            wb = load_workbook(excel_path)
+            ws = wb.active
+            for row in ws.iter_rows():
+                for cell in row:
+                    cell.value = cell.value
+            
+            output_path = os.path.join(excel_directory, f"{os.path.splitext(selected_excel)[0]}_{curr_time}.xlsx")
+
+            df.to_excel(output_path, index=False)
+            print("\nExcel file " +file_name_in_color+ " cleaning done.")
+        except PermissionError:
+            print("\n"+Back.RED+f"File '{selected_excel}' not valid. Skipping file..."+Style.RESET_ALL)
             continue
-        
-        # Remove formatting and objects
-        wb = load_workbook(file_name_in+'.xlsx')
-        ws = wb.active
-        for row in ws.iter_rows():
-            for cell in row:
-                cell.value = cell.value
-
-        # Write the cleaned data to a new Excel file
-        df.to_excel(file_name_out+'.xlsx', index=False)
-        print("Excel file " +file_name_in_color+ " cleaning done.")
-
-    print("\nCleaning excel files have been completed. Thank you !")
-
+            
 def mergeExcel():
     curr_time = datetime.now().strftime("%Y%m%d%H%M%S")
 
-    # Create an empty list to store the input file names
     input_files = []
 
-    # Specify the directory containing the Excel and CSV files
-    excel_directory = input("Enter the directory containing the Excel and CSV files:\n")
-    # Get the folder name
+    excel_directory = input("\nEnter Excel folder directory:\n")
     folder_name = os.path.basename(excel_directory)
-    # Get a list of Excel and CSV files in the directory and sort them by filename
     valid_extensions = ('.xlsx', '.xls', '.csv')
     excel_files = [excel_file for excel_file in os.listdir(excel_directory) if excel_file.lower().endswith(valid_extensions)]
     excel_files.sort()
@@ -479,7 +497,7 @@ def clean_and_merge():
 
     # Ask the user for the file names and add them to the list
     while True:
-        file_name_in = input("\nEnter excel file name (or press Enter to finish): ")
+        file_name_in = input("\nEnter excel file full path without .xlsx (or press Enter to finish): ")
         if not file_name_in:
             break
         file_name_out = input("Enter output file name: ")
@@ -556,7 +574,7 @@ def filter_and_merge_key():
     input_files = []
 
     # Specify the directory containing the PDF files
-    excel_directory = input("Enter the directory containing the xlsx files:\n")
+    excel_directory = input("\nEnter Excel folder directory:\n")
     # Get the folder name
     folder_name = os.path.basename(excel_directory)
     # Get a list of PDF files in the directory and sort them by filename
@@ -621,7 +639,7 @@ def merge_sheets():
 
     # Ask the user to enter the input file names one by one, until they enter 'done'
     while True:
-        filename = input("Enter excel file name (or press Enter to finish): ")
+        filename = input("Enter excel file full path without .xlsx (or press Enter to finish): ")
         if not filename:
             break
         excel_file_names.append(filename)
