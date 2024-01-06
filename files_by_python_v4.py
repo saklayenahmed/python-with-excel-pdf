@@ -129,7 +129,10 @@ def initial():
         print(intext)
         initial()
     
-    input()
+    continue_input = input("\n\n"+ Back.GREEN + "Press Enter to continue. " + Style.RESET_ALL)
+
+    if not continue_input:
+        initial()
 
 
 def pdftojpg():
@@ -645,8 +648,10 @@ def merge_sheets():
     print('\nSheets of excel file '+Back.BLUE + ", ".join(excel_file_names) + Style.RESET_ALL+' merged done. Thank you !') 
 
 # Call the initial function
+
 try:
     initial()
 except KeyboardInterrupt:
-    print ("\n\n"+Back.RED+"Keyboard interrupted ! Exiting by the user. Thank you !"+Style.RESET_ALL+"\n")
+    print("\n\n" + Back.RED + "Keyboard interrupted ! Exiting by the user. Thank you !" + Style.RESET_ALL + "\n")
     exit(1)
+
